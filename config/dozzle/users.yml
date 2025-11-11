@@ -1,0 +1,13 @@
+users:
+  username1:
+    email: user1@example.com
+    name: User One
+    password: $2a$11$9ho4vY2LdJ/WBopFcsAS0uORC0x2vuFHQgT/yBqZyzclhHsoaIkzK # bcrypt hash of the password
+    # filter: container_name=my_container
+    roles: viewer,admin
+  # username2:
+  #   email: user2@example.com
+  #   name: User Two
+  #   password: $2a$11$EXAMPLEHASHFORUSER2
+  #   filter: container_name=another_container
+  #   roles: viewer

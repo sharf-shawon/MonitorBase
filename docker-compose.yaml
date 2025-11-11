@@ -1,0 +1,149 @@
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce:lts
+    restart: always
+    networks:
+      - npm-proxy
+    ports:
+      - "9443:9443"
+      # - "8000:8000"  # Remove if you do not intend to use Edge Agents
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/portainer:/data
+
+  npm:
+    container_name: npm
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    networks:
+      - npm-proxy
+    ports:
+      # These ports are in format <host-port>:<container-port>
+      - "80:80" # Public HTTP Port
+      - "443:443" # Public HTTPS Port
+      - "81:81" # Admin Web Port
+      # Add any other Stream port you want to expose
+      # - "21:21" # FTP
+    volumes:
+      - ./data/npm:/data
+      - ./data/letsencrypt:/etc/letsencrypt
+    environment:
+      # Uncomment this if you want to change the location of
+      # the SQLite DB file within the container
+      DB_SQLITE_FILE: "/data/database.sqlite"
+      TZ: "America/Chicago"  # Set your timezone
+
+      # Uncomment this if IPv6 is not enabled on your host
+      DISABLE_IPV6: "true"
+
+  kuma:
+    container_name: kuma
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    networks:
+      - npm-proxy
+    # ports:
+    #   - "3001:3001"
+    volumes:
+      - ./data/kuma:/app/data
+
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    restart: unless-stopped
+    networks:
+      - npm-proxy
+    # ports:
+    #   - "8080:8080"
+    volumes:
+      # Mount local Docker socket to monitor local Docker containers
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/dozzle:/data:ro
+    environment:
+      TZ: "America/Chicago"  # Set your timezone
+      # Comma-separated list of remote Docker hosts, TCP URLs
+      DOZZLE_REMOTE_HOST: "tcp://1.1.1.1:2375,tcp://2.2.2.2:2375"
+      # Include local Docker socket for local containers monitoring
+      DOCKER_HOST: "unix:///var/run/docker.sock"
+
+  beszel:
+    container_name: beszel
+    image: henrygd/beszel:latest
+    restart: unless-stopped
+    networks:
+      - npm-proxy
+    # ports:
+    #   - "8090:8090"
+    volumes:
+      - ./data/beszel:/beszel_data
+
+  beszel-agent:
+    container_name: beszel-agent
+    image: henrygd/beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./data/beszel-agent:/var/lib/beszel-agent
+      # monitor other disks / partitions by mounting a folder in /extra-filesystems
+      # - /mnt/disk/.beszel:/extra-filesystems/sda1:ro
+    environment:
+      LISTEN: 45876
+      TZ: "America/Chicago"
+      KEY: ""
+      TOKEN: ""
+      HUB_URL: ""
+
+  wakapi:
+    container_name: wakapi
+    image: ghcr.io/muety/wakapi:latest
+    user: "1001:1001"
+    init: true
+    restart: unless-stopped
+    networks:
+      - npm-proxy
+    # ports:
+    #     - "3000:3000"
+    volumes:
+      - ./data/wakapi:/data
+    environment:
+      TZ: "America/Chicago"  # Set your timezone
+      WAKAPI_PASSWORD_SALT: ""
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      TZ: "America/Chicago"  # Set your timezone
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_SCHEDULE: "0 0 6 * * 6"  # Run at 6:00 AM every Saturday
+      WATCHTOWER_ROLLING_RESTART: "true"
+
+  backup:
+    container_name: backup
+    image: offen/backup
+    restart: unless-stopped
+    volumes:
+      - ./data:/source:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      TZ: "America/Chicago"  # Set your timezone
+      # Set the backup interval, e.g., "1d" for daily
+      BACKUP_CREATE: "1d"
+      # Set how long to keep backups, e.g., "7d" for 7 days
+      BACKUP_CLEAN: "15d"
+      # --- S3 Bucket Configuration ---
+      # Replace the placeholder values below with your S3 bucket details.
+      AWS_S3_BUCKET_NAME: "<YOUR_S3_BUCKET_NAME>"
+      AWS_ACCESS_KEY_ID: "<YOUR_AWS_ACCESS_KEY_ID>"
+      AWS_SECRET_ACCESS_KEY: "<YOUR_AWS_SECRET_ACCESS_KEY>"
+      AWS_S3_ENDPOINT: "<YOUR_S3_ENDPOINT>"
+
+networks:
+  npm-proxy:
+    external: true
+
