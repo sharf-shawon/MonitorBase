@@ -1,17 +1,4 @@
 services:
-#  portainer:
-#    container_name: portainer
-#    image: portainer/portainer-ce:lts
-#    restart: always
-#    networks:
-#      - npm-proxy
-#    ports:
-#      - "9443:9443"
-#      # - "8000:8000"  # Remove if you do not intend to use Edge Agents
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#      - ./data/portainer:/data
-
   npm:
     container_name: npm
     image: jc21/nginx-proxy-manager:latest
@@ -19,22 +6,17 @@ services:
     networks:
       - npm-proxy
     ports:
-      # These ports are in format <host-port>:<container-port>
       - "80:80" # Public HTTP Port
       - "443:443" # Public HTTPS Port
-#      - "81:81" # Admin Web Port
+      - "81:81" # Admin Web Port
       # Add any other Stream port you want to expose
       # - "21:21" # FTP
     volumes:
       - ./data/npm:/data
       - ./data/letsencrypt:/etc/letsencrypt
     environment:
-      # Uncomment this if you want to change the location of
-      # the SQLite DB file within the container
-      DB_SQLITE_FILE: "/data/database.sqlite"
       TZ: "${TZ}"  # Set your timezone
-
-      # Uncomment this if IPv6 is not enabled on your host
+      DB_SQLITE_FILE: "/data/database.sqlite"
       DISABLE_IPV6: "true"
 
   kuma:
@@ -95,22 +77,6 @@ services:
       TOKEN: "${BESZEL_AGENT_TOKEN}"
       HUB_URL: "${BESZEL_AGENT_HUB_URL}"
 
-  wakapi:
-    container_name: wakapi
-    image: ghcr.io/muety/wakapi:latest
-    user: "1001:1001"
-    init: true
-    restart: unless-stopped
-    networks:
-      - npm-proxy
-    # ports:
-    #     - "3000:3000"
-    volumes:
-      - ./data/wakapi:/data
-    environment:
-      TZ: "${TZ}"  # Set your timezone
-      WAKAPI_PASSWORD_SALT: "${WAKAPI_PASSWORD_SALT}"
-
 #  watchtower:
 #    image: containrrr/watchtower
 #    container_name: watchtower
@@ -135,19 +101,17 @@ services:
       - ./data:/backup:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
-      TZ: "${TZ}"  # Set your timezone
-      # Set the backup interval, e.g., "1d" for daily
-#      BACKUP_CREATE: "5m"
-      BACKUP_CRON_EXPRESSION: "*/3 * * * *"
+      TZ: "${TZ}"
+      BACKUP_CRON_EXPRESSION: "0 0 * * *"
       # Set how long to keep backups, e.g., "7d" for 7 days
       BACKUP_CLEAN: "15d"
       BACKUP_COMPRESSION: "gz"
       # --- S3 Bucket Configuration ---
-      # Replace the placeholder values below with your S3 bucket details.
       AWS_S3_BUCKET_NAME: "${AWS_S3_BUCKET_NAME}"
       AWS_ACCESS_KEY_ID: "${AWS_ACCESS_KEY_ID}"
       AWS_SECRET_ACCESS_KEY: "${AWS_SECRET_ACCESS_KEY}"
-      AWS_ENDPOINT: "${AWS_S3_ENDPOINT}"
+      AWS_ENDPOINT: "${AWS_ENDPOINT}"
+      AWS_REGION: "${AWS_REGION}"
 
 networks:
   npm-proxy:
