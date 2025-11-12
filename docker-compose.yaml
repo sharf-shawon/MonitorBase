@@ -60,12 +60,13 @@ services:
     volumes:
       # Mount local Docker socket to monitor local Docker containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/dozzle:/data
+      # - ./config/dozzle:/data
       # - ./data/dozzle:/data:ro
     environment:
       TZ: "${TZ}"  # Set your timezone
       DOCKER_HOST: "unix:///var/run/docker.sock"
       DOZZLE_AUTH_PROVIDER: simple
+      DOZZLE_REMOTE_HOST: "${DOZZLE_REMOTE_HOST}"
       # Comma-separated list of remote Docker hosts, TCP URLs
 #      DOZZLE_REMOTE_HOST: "tcp://1.1.1.1:2375,tcp://2.2.2.2:2375"
       # Include local Docker socket for local containers monitoring
