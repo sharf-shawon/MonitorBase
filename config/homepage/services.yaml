@@ -1,0 +1,32 @@
+# URLs are placeholders. Replace with your actual URLs.
+# Ping URLs use container names, so they should work out of the box.
+- Services:
+    - Homepage:
+        icon: mdi-home
+        href: https://homepage.shawon.me
+        description: This dashboard
+        ping: http://homepage:3000
+
+- Infrastructure:
+    - Nginx Proxy Manager:
+        icon: mdi-nginx
+        href: https://npm.shawon.me/
+        description: Reverse proxy and SSL certificate management
+        ping: http://localhost:81
+
+- Monitoring:
+    - Uptime Kuma:
+        icon: mdi-heart-pulse
+        href: https://monitor.shawon.me
+        description: Uptime monitoring
+        ping: http://kuma:3001
+    - Dozzle:
+        icon: mdi-docker
+        href: https://dozzle.shawon.me
+        description: Real-time log viewer for Docker containers
+        ping: http://dozzle:8080
+    - Beszel:
+        icon: mdi-chart-line
+        href: https://beszel.shawon.me
+        description: System monitoring
+        ping: http://beszel:8090

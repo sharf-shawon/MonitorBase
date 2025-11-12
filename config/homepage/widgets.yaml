@@ -1,0 +1,22 @@
+- resources:
+    label: System
+    cpu: true
+    memory: true
+    storage: /
+- search:
+    provider: google
+    target: _blank
+- datetime:
+    text_size: xl
+    format:
+        timeStyle: long
+        dateStyle: full
+- weather:
+    provider: openweathermap
+    api_key: openweathermapapikey # from settings.yaml
+    latitude: 40.7128
+    longitude: -74.0060
+    units: imperial
+- docker:
+    label: Containers
+    sort: state
