@@ -1,0 +1,8 @@
+users:
+    mshawon:
+        email: sharf@shawon.me
+        name: mshawon
+        password: $2a$11$KcGSnFt3wlAXRf1hJHLOqODkm9s6HNRR6jUXHZRHLP1T2iQ5KYitm
+        filter: ""
+        roles: ""
+
