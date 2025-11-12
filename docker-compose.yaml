@@ -102,7 +102,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     environment:
       TZ: "${TZ}"
-      BACKUP_CRON_EXPRESSION: "* * * * *"
+      BACKUP_CRON_EXPRESSION: "0 */12 * * *"
       # Set how long to keep backups, e.g., "7d" for 7 days
       BACKUP_CLEAN: "15d"
       BACKUP_COMPRESSION: "gz"
