@@ -1,7 +1,7 @@
 # For configuration options and examples, please see:
 # https://gethomepage.dev/configs/settings/
 
-title: Server Dashboard
+title: Dashboard
 background: https://images.unsplash.com/photo-1502790671504-542ad42d5189?auto=format&fit=crop&w=2560&q=80
 theme: dark
 color: slate
@@ -15,5 +15,5 @@ layout:
     style: row
 
 providers:
-  openweathermap: openweathermapapikey
-  weatherapi: weatherapiapikey
+  openweathermap: ${OPENWEATHERMAP_API_KEY}
+  weatherapi: ${WEATHERAPI_API_KEY}

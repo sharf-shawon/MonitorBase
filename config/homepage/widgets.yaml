@@ -17,6 +17,10 @@
     latitude: 40.7128
     longitude: -74.0060
     units: imperial
-- docker:
-    label: Containers
-    sort: state
+
+
+- beszel:
+  url: ${BESZEL_AGENT_HUB_URL}
+  username: homepage # email
+  password: ${HOMEPAGE_BESZEL_PASSWORD}
+  version: 2 # optional, default is 1

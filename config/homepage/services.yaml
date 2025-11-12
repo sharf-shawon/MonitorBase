@@ -30,3 +30,9 @@
         href: https://beszel.shawon.me
         description: System monitoring
         ping: http://beszel:8090
+        widget:
+            type: beszel
+            url: ${BESZEL_AGENT_HUB_URL}
+            username: ${HOMEPAGE_BESZEL_USERNAME} # email
+            password: ${HOMEPAGE_BESZEL_PASSWORD}
+            version: 2 # optional, default is 1
