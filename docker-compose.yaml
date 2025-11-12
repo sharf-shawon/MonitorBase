@@ -66,7 +66,7 @@ services:
       TZ: "${TZ}"  # Set your timezone
       DOCKER_HOST: "unix:///var/run/docker.sock"
       DOZZLE_AUTH_PROVIDER: simple
-      DOZZLE_REMOTE_HOST: "${DOZZLE_REMOTE_HOST}"
+      DOZZLE_REMOTE_AGENT: "${DOZZLE_REMOTE_AGENT}"
       # Comma-separated list of remote Docker hosts, TCP URLs
 #      DOZZLE_REMOTE_HOST: "tcp://1.1.1.1:2375,tcp://2.2.2.2:2375"
       # Include local Docker socket for local containers monitoring
