@@ -41,7 +41,6 @@ services:
     volumes:
       # Mount local Docker socket to monitor local Docker containers
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - .config/dozzle/users.yml:/data/users.yml
       - ./data/dozzle:/data:ro
     environment:
       TZ: "${TZ}"  # Set your timezone
